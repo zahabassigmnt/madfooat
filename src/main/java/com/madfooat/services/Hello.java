@@ -13,7 +13,7 @@ public class Hello {
 	
 	@RequestMapping("/")
 	public String index() {
-		 Path dirPathObj = Paths.get("/zahab");
+		 Path dirPathObj = Paths.get("/zahab/test");
 		 String workingDir = System.getProperty("user.dir");
 		   System.out.println("Current working directory : " + workingDir);
 		   try {
