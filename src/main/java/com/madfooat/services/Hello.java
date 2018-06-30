@@ -14,6 +14,8 @@ public class Hello {
 	@RequestMapping("/")
 	public String index() {
 		 Path dirPathObj = Paths.get("/zahab");
+		 String workingDir = System.getProperty("user.dir");
+		   System.out.println("Current working directory : " + workingDir);
 		   try {
 			   dirPathObj = Files.createDirectories(dirPathObj);
 			   System.out.println("dirPathObj >> "+ dirPathObj);
