@@ -16,6 +16,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.madfooat.files.input.InFileProcessor;
 import com.madfooat.files.input.InRecordDTO;
 import com.madfooat.files.output.OutFileProcessor;
+import com.madfooat.jpa.model.MerchantFile;
+import com.madfooat.jpa.repo.MerchantFilesRepo;
 
 @Component
 public class S3EventConsumer {
@@ -28,7 +30,11 @@ public class S3EventConsumer {
 	
 	@Autowired
 	private OutFileProcessor outFileProcessor;
+	
+	@Autowired
+	private MerchantFilesRepo merRepo;
 
+	
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
@@ -38,10 +44,16 @@ public class S3EventConsumer {
 		try {
 			S3EventNotification e = S3EventNotification.parseJson(message);
 			
-			//merchants/X/In_trx.csv
+			
 			String incomingFilename =  new File(e.getRecords().get(0).getS3().getObject().getKey()).getName(); 
 			if(incomingFilename.startsWith("In_") && !incomingFilename.endsWith("_Out.csv")) {
-				
+			
+			//Insert File with status uploaded
+				MerchantFile file = new MerchantFile();
+				file.setInput_s3_key(e.getRecords().get(0).getS3().getObject().getKey());
+				file.setMerchant_code("X");
+				file.setStatus("Uploaded and under processing");
+				merRepo.save(file);	
 			
 			S3Object s3Object = amazonS3Client.getObject(bucket, e.getRecords().get(0).getS3().getObject().getKey());
 			S3ObjectInputStream  is = s3Object.getObjectContent();
