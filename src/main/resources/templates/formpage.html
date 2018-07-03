@@ -174,8 +174,7 @@ body
        <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
   <script>
 
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+ 
 
     var pusher = new Pusher('864e33eef346fc833ac5', {
       cluster: 'eu',
@@ -184,7 +183,11 @@ body
 
     var channel = pusher.subscribe('my-channel');
     channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
+       $('#pusher_message').show();
+       $('#success_message').hide();
+       $('#complete_message').show();
+       
+       $("#pid").attr("href", "/files/downloadFile/" + data.message);
     });
   </script>
        
@@ -251,7 +254,7 @@ body
                             
                     $.ajax({
                         type: "POST",
-                        url: '/uploader/uploadFile',
+                        url: '/files/uploadFile',
                         data: fd,
                         async: true,
                         success: function () {
@@ -302,8 +305,13 @@ body
                         Sorry there was an error sending your file. 
                     </div>
                     <div id="success_message" style="width:100%; height:100%; display:none; "> <h2>Success! File under processing.</h2> </div>
+                    <div id="complete_message" style="width:100%; height:100%; display:none; "> <h2>Output File is ready to be downloaded</h2> </div>
+                    
                 </div>
             </div>
         </div>
+        
+        <div id="pusher_message" style="width:100%; height:100%;  display:none; "> <a href="" id="pid">Download OutputFile</a> </div>
+     
     </body>
 </html>

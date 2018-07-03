@@ -1,6 +1,7 @@
 package com.madfooat.events.jms;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.madfooat.files.input.InRecordDTO;
 import com.madfooat.files.output.OutFileProcessor;
 import com.madfooat.jpa.model.MerchantFile;
 import com.madfooat.jpa.repo.MerchantFilesRepo;
+import com.pusher.rest.Pusher;
 
 @Component
 public class S3EventConsumer {
@@ -66,7 +68,16 @@ public class S3EventConsumer {
 			file.setStatus("processed successfully");
 			merRepo.save(file);
 			
-			System.out.println("Uploaded to S3");
+			
+			
+			System.out.println("Uploaded to S3 file key :" + file.getOutput_s3_key() + ":file >> " + file.getId());
+			
+			
+			//send Pusher notification
+			    Pusher pusher = new Pusher("554631", "864e33eef346fc833ac5", "61eb928d2e3a018ec969");
+		        pusher.setCluster("eu");
+		        pusher.setEncrypted(true);
+		        pusher.trigger("my-channel", "my-event", Collections.singletonMap("message", file.getId()));
 			}
 			else {
 				System.out.println("No Uploading gomes");
