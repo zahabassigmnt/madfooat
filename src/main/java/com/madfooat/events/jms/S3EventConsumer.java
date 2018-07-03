@@ -60,6 +60,12 @@ public class S3EventConsumer {
 			List<InRecordDTO>  items = inFileProcessor.processInputFile(is);
 			File outFile = outFileProcessor.processOutFile(items, incomingFilename);
 			amazonS3Client.putObject(bucket, e.getRecords().get(0).getS3().getObject().getKey() + "_Out.csv", outFile);
+			
+			//Update output file location to be updated from portal
+			file.setOutput_s3_key(e.getRecords().get(0).getS3().getObject().getKey() + "_Out.csv");
+			file.setStatus("processed successfully");
+			merRepo.save(file);
+			
 			System.out.println("Uploaded to S3");
 			}
 			else {
