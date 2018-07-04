@@ -12,6 +12,7 @@ public class ZahabApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		System.out.println("test");
 	}
 
 }
